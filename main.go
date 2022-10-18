@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 func main() {
@@ -14,30 +15,35 @@ func main() {
 	fmt.Printf("We have a total of %v tickets and %v are still available\n", conferenceTickets, availableTickets)
 	fmt.Println("Get your tickets here to attend")
 
-	var firstName string
-	var lastName string
-	var email string
-	var boughtTickets int
+	for {
+		var firstName string
+		var lastName string
+		var email string
+		var boughtTickets int
 
-	fmt.Println("Enter First Name:")
-	fmt.Scan(&firstName)
+		fmt.Println("Enter First Name:")
+		fmt.Scan(&firstName)
 
-	fmt.Println("Enter Last Name:")
-	fmt.Scan(&lastName)
+		fmt.Println("Enter Last Name:")
+		fmt.Scan(&lastName)
 
-	fmt.Println("Enter Email Address:")
-	fmt.Scan(&email)
+		fmt.Println("Enter Email Address:")
+		fmt.Scan(&email)
 
-	fmt.Println("How many ticket(s) do you need?:")
-	fmt.Scan(&boughtTickets)
+		fmt.Println("How many ticket(s) do you need?:")
+		fmt.Scan(&boughtTickets)
 
-	bookings = append(bookings, firstName + " " + lastName)
-	fmt.Printf("The whole slice: %v\n", bookings)
-	fmt.Printf("The first value: %v\n", bookings[0])
-	fmt.Printf("Slice Type: %T\n", bookings)
-	fmt.Printf("Slice length: %v\n", len(bookings))
+		bookings = append(bookings, firstName + " " + lastName)
+		availableTickets = availableTickets - uint(boughtTickets)
 
-	availableTickets = availableTickets - uint(boughtTickets)
-	fmt.Printf("Thank you %v %v for booking %v tickets. Booking confirmation will be sent to this email %v\n", firstName, lastName, boughtTickets, email)
-	fmt.Printf("%v tickets is remaining\n", availableTickets)
+		firstNames := []string{}
+		for _, booking := range bookings {
+			firstName := strings.Fields(booking)[0]
+			firstNames = append(firstNames, firstName)
+		}
+
+		fmt.Printf("Thank you %v %v for booking %v tickets. Booking confirmation will be sent to this email %v\n", firstName, lastName, boughtTickets, email)
+		fmt.Printf("%v tickets is remaining\n", availableTickets)
+		fmt.Printf("These are all the bookings: %v\n", firstNames)
+	}
 }
