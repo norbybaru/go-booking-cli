@@ -30,5 +30,7 @@ func main() {
 	fmt.Println("How many ticket(s) do you need?:")
 	fmt.Scan(&boughtTickets)
 
+	availableTickets = availableTickets - uint(boughtTickets)
 	fmt.Printf("Thank you %v %v for booking %v tickets. Booking confirmation will be sent to this email %v\n", firstName, lastName, boughtTickets, email)
+	fmt.Printf("%v tickets is remaining\n", availableTickets)
 }
