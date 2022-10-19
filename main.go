@@ -33,10 +33,15 @@ func main() {
 		fmt.Printf("How many ticket(s) do you need? (%v available): ", availableTickets)
 		fmt.Scan(&boughtTickets)
 
-		for ; boughtTickets > availableTickets; {
+		isValidTicketNumber := boughtTickets > 0 && boughtTickets <= availableTickets
+
+		for ; !isValidTicketNumber; {
 			fmt.Printf("Maximum of %v ticket(s) can be bought\n", availableTickets)
 			fmt.Printf("How many ticket(s) do you need? (%v available): ", availableTickets)
 			fmt.Scan(&boughtTickets)
+			if boughtTickets > 0 && boughtTickets <= availableTickets {
+				isValidTicketNumber = true
+			}
 		}
 
 		bookings = append(bookings, firstName + " " + lastName)
@@ -52,5 +57,10 @@ func main() {
 		fmt.Printf("Booking confirmation will be sent to this email %v.\n", email)
 		fmt.Printf("%v tickets is remaining\n", availableTickets)
 		fmt.Printf("These are all the bookings: %v\n\n", firstNames)
+
+		if availableTickets == 0 {
+			fmt.Printf("Our %v is currently sold out. Come back next year\n", conferenceName)
+			break
+		}
 	}
 }
