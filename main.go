@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
 func main() {
 	const conferenceName = "GoCon Conference"
 	const conferenceTickets int = 50
+	const namesMinimumCharacters = 2
 	var availableTickets uint = 50
 	var bookings []string
 
@@ -23,12 +25,56 @@ func main() {
 
 		fmt.Print("Enter First Name: ")
 		fmt.Scan(&firstName)
+		
+		isNumericFirstName := false
+		if _, err := strconv.Atoi(firstName); err == nil {
+			isNumericFirstName = true
+		}
+
+		isValidFirstName := len(firstName) > namesMinimumCharacters && !isNumericFirstName
+
+		for ; !isValidFirstName; {
+			fmt.Printf("Enter First Name (%v characters minimum): ", namesMinimumCharacters)
+			fmt.Scan(&firstName)
+
+			if _, err := strconv.Atoi(firstName); err != nil {
+				isNumericFirstName = false
+			}
+				
+			isValidFirstName = len(firstName) > namesMinimumCharacters && !isNumericFirstName
+		}
 
 		fmt.Print("Enter Last Name: ")
 		fmt.Scan(&lastName)
 
+		isNumericLastName := false
+		if _, err := strconv.Atoi(lastName); err == nil {
+			isNumericLastName = true
+		}
+
+		isValidLastName := len(lastName) > namesMinimumCharacters && !isNumericLastName
+
+		for ; !isValidLastName; {
+			fmt.Printf("Enter Last Name (%v characters minimum): ", namesMinimumCharacters)
+			fmt.Scan(&lastName)
+
+			if _, err := strconv.Atoi(lastName); err != nil {
+				isNumericLastName = false
+			}
+
+			isValidLastName = len(lastName) > namesMinimumCharacters && !isNumericLastName
+		}
+
 		fmt.Print("Enter Email Address: ")
 		fmt.Scan(&email)
+
+		isValidEmail := strings.Contains(email, "@")
+
+		for ; !isValidEmail; {
+			fmt.Printf("Enter a valid Email Address: ")
+			fmt.Scan(&email)
+			isValidEmail = strings.Contains(email, "@")
+		}
 
 		fmt.Printf("How many ticket(s) do you need? (%v available): ", availableTickets)
 		fmt.Scan(&boughtTickets)
@@ -53,7 +99,7 @@ func main() {
 			firstNames = append(firstNames, firstName)
 		}
 
-		fmt.Printf("\nThank you %v %v for booking %v tickets.\n", firstName, lastName, boughtTickets)
+		fmt.Printf("\nThank you %v %v for booking %v ticket(s).\n", firstName, lastName, boughtTickets)
 		fmt.Printf("Booking confirmation will be sent to this email %v.\n", email)
 		fmt.Printf("%v tickets is remaining\n", availableTickets)
 		fmt.Printf("These are all the bookings: %v\n\n", firstNames)
