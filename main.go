@@ -103,28 +103,7 @@ func captureFirstName(validationFailed bool) string {
 		fmt.Print("Enter First Name: ")
 		fmt.Scan(&firstName)
 	}
-	return validateFirstName(firstName)
-}
-
-func validateFirstName(name string) string {
-	isNumericFirstName := false
-	if _, err := strconv.Atoi(name); err == nil {
-		isNumericFirstName = true
-	}
-
-	isValidFirstName := len(name) >= namesMinimumCharacters && !isNumericFirstName
-
-	for ; !isValidFirstName; {
-		name = captureFirstName(true)
-
-		if _, err := strconv.Atoi(name); err != nil {
-			isNumericFirstName = false
-		}
-			
-		isValidFirstName = len(name) >= namesMinimumCharacters && !isNumericFirstName
-	}
-
-	return name
+	return validateInputNames(firstName, "firstName")
 }
 
 func captureLastName(validationFailed bool) string {
@@ -137,28 +116,35 @@ func captureLastName(validationFailed bool) string {
 		fmt.Scan(&lastName)
 	}
 
-	return validateLastName(lastName)
+	return validateInputNames(lastName, "lastName")
 }
 
-func validateLastName(name string) string {
-	isNumericLastName := false
-	if _, err := strconv.Atoi(name); err == nil {
-		isNumericLastName = true
+func validateInputNames(value string, input string) string {
+	isNumericName := false
+	if _, err := strconv.Atoi(value); err == nil {
+		isNumericName = true
 	}
 
-	isValidLastName := len(name) >= namesMinimumCharacters && !isNumericLastName
+	isValidName := len(value) >= namesMinimumCharacters && !isNumericName
 
-	for ; !isValidLastName; {
-		name = captureLastName(true)
-
-		if _, err := strconv.Atoi(name); err != nil {
-			isNumericLastName = false
+	for ; !isValidName; {
+		switch input {
+			case "firstName":
+				value = captureFirstName(true)
+			case "lastName":
+				value = captureLastName(true)
+			default:
+				fmt.Printf("Invalid input value: %v", input)
 		}
 
-		isValidLastName = len(name) >= namesMinimumCharacters && !isNumericLastName
+		if _, err := strconv.Atoi(value); err != nil {
+			isNumericName = false
+		}
+			
+		isValidName = len(value) >= namesMinimumCharacters && !isNumericName
 	}
 
-	return name
+	return value
 }
 
 func summary(firstName string, lastName string, email string, boughtTickets uint) {
