@@ -10,20 +10,36 @@ import (
 const conferenceName = "GoCon Conference"
 const conferenceTickets uint = 50
 var availableTickets uint = helper.AvailableTickets()
+
+type UserData struct {
+	firstName string
+	lastName string
+	email string
+	boughtTickets uint
+}
+
 // Empty slice of map
-var bookings []map[string]string
+var bookings []UserData
 
 func main() {
 	welcome()
 
 	for {
-		userData := helper.GetInputs()
-		bookings = append(bookings, userData)
-	
-		boughtTicket, _ := strconv.Atoi(userData["boughtTicket"])
-		availableTickets = availableTickets - uint(boughtTicket)
+		input := helper.GetInputs()
+		boughtTicket, _ := strconv.Atoi(input["boughtTicket"])
 
-		summary(userData["firstName"], userData["lastName"], userData["email"], userData["boughtTicket"])
+		user := UserData {
+			firstName: input["firstName"],
+			lastName: input["lastName"],
+			email: input["email"],
+			boughtTickets: uint(boughtTicket),
+		}
+	
+		bookings = append(bookings, user)
+	
+		availableTickets = availableTickets - user.boughtTickets
+
+		summary(user)
 
 		if availableTickets == 0 {
 			fmt.Printf("Our %v is currently sold out. Come back next year\n", conferenceName)
@@ -38,9 +54,9 @@ func welcome() {
 	fmt.Println("Get your tickets here to attend")
 }
 
-func summary(firstName string, lastName string, email string, boughtTickets string) {
-	fmt.Printf("\nThank you %v %v for booking %v ticket(s).\n", firstName, lastName, boughtTickets)
-	fmt.Printf("Booking confirmation will be sent to this email %v.\n", email)
+func summary(user UserData) {
+	fmt.Printf("\nThank you %v %v for booking %v ticket(s).\n", user.firstName, user.lastName, user.boughtTickets)
+	fmt.Printf("Booking confirmation will be sent to this email %v.\n", user.email)
 	fmt.Printf("%v tickets is remaining\n", availableTickets)
 
 	firstNames := getFirstNamesFromBookings()
@@ -50,7 +66,7 @@ func summary(firstName string, lastName string, email string, boughtTickets stri
 func getFirstNamesFromBookings() []string {
 	firstNames := []string{}
 	for _, booking := range bookings {
-		firstNames = append(firstNames, booking["firstName"])
+		firstNames = append(firstNames, booking.firstName)
 	}
 
 	return firstNames

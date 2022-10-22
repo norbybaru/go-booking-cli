@@ -24,6 +24,7 @@ func GetInputs() map[string]string {
 	inputData["firstName"] = firstName
 	inputData["lastName"] = lastName
 	inputData["email"] = email
+	// Maps cannot allow different types of data
 	inputData["boughtTicket"] = strconv.FormatUint(uint64(boughtTicket), 10)
 
 	return inputData
