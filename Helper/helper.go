@@ -31,6 +31,8 @@ func CaptureInput(field string) (string, error) {
 			return captureLastName(false), nil
 		case "email":
 			return captureEmail(false), nil
+		case "boughtTicket":
+			return strconv.FormatUint(uint64(captureBoughtTicket(false)), 10), nil
 		default:
 			fmt.Println("Invalid field")
 			return "", errors.New("invalid field: " + field)
