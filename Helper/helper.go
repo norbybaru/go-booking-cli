@@ -8,10 +8,14 @@ import (
 )
 
 const namesMinimumCharacters = 3
-const availableTickets uint = 50
+var availableTickets uint = 50
 
 func AvailableTickets() uint {
 	return availableTickets
+}
+
+func updateAvailableTickets(boughtTickets uint) {
+	availableTickets = availableTickets - boughtTickets
 }
 
 func GetInputs() map[string]string {
@@ -26,6 +30,8 @@ func GetInputs() map[string]string {
 	inputData["email"] = email
 	// Maps cannot allow different types of data
 	inputData["boughtTicket"] = strconv.FormatUint(uint64(boughtTicket), 10)
+
+	updateAvailableTickets(boughtTicket)
 
 	return inputData
 }
