@@ -1,27 +1,29 @@
 package main
 
 import (
-	"fmt"
-	"strings"
 	"booking-cli/helper"
+	"fmt"
+	"strconv"
 )
 
 // Package level variables
 const conferenceName = "GoCon Conference"
 const conferenceTickets uint = 50
 var availableTickets uint = helper.AvailableTickets()
-var bookings []string
+// Empty slice of map
+var bookings []map[string]string
 
 func main() {
 	welcome()
 
 	for {
-		firstName, lastName, email, boughtTickets := helper.GetInputs()
+		userData := helper.GetInputs()
+		bookings = append(bookings, userData)
+	
+		boughtTicket, _ := strconv.Atoi(userData["boughtTicket"])
+		availableTickets = availableTickets - uint(boughtTicket)
 
-		bookings = append(bookings, firstName + " " + lastName)
-		availableTickets = availableTickets - uint(boughtTickets)
-
-		summary(firstName, lastName, email, boughtTickets)
+		summary(userData["firstName"], userData["lastName"], userData["email"], userData["boughtTicket"])
 
 		if availableTickets == 0 {
 			fmt.Printf("Our %v is currently sold out. Come back next year\n", conferenceName)
@@ -36,7 +38,7 @@ func welcome() {
 	fmt.Println("Get your tickets here to attend")
 }
 
-func summary(firstName string, lastName string, email string, boughtTickets uint) {
+func summary(firstName string, lastName string, email string, boughtTickets string) {
 	fmt.Printf("\nThank you %v %v for booking %v ticket(s).\n", firstName, lastName, boughtTickets)
 	fmt.Printf("Booking confirmation will be sent to this email %v.\n", email)
 	fmt.Printf("%v tickets is remaining\n", availableTickets)
@@ -48,8 +50,7 @@ func summary(firstName string, lastName string, email string, boughtTickets uint
 func getFirstNamesFromBookings() []string {
 	firstNames := []string{}
 	for _, booking := range bookings {
-		firstName := strings.Fields(booking)[0]
-		firstNames = append(firstNames, firstName)
+		firstNames = append(firstNames, booking["firstName"])
 	}
 
 	return firstNames

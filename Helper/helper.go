@@ -14,13 +14,19 @@ func AvailableTickets() uint {
 	return availableTickets
 }
 
-func GetInputs() (string, string, string, uint) {
+func GetInputs() map[string]string {
 	firstName := captureFirstName(false)
 	lastName := captureLastName(false)
 	email := captureEmail(false)
 	boughtTicket := captureBoughtTicket(false)
 
-	return firstName, lastName, email, boughtTicket
+	var inputData = make(map[string]string)
+	inputData["firstName"] = firstName
+	inputData["lastName"] = lastName
+	inputData["email"] = email
+	inputData["boughtTicket"] = strconv.FormatUint(uint64(boughtTicket), 10)
+
+	return inputData
 }
 
 func CaptureInput(field string) (string, error) {
