@@ -4,6 +4,7 @@ import (
 	"booking-cli/helper"
 	"fmt"
 	"strconv"
+	"time"
 )
 
 // Package level variables
@@ -36,6 +37,7 @@ func main() {
 		bookings = append(bookings, user)
 
 		summary(user)
+		go emailTickets(user.email, user.boughtTickets)
 
 		if helper.AvailableTickets() == 0 {
 			fmt.Printf("Our %v is currently sold out. Come back next year\n", conferenceName)
@@ -66,4 +68,13 @@ func getFirstNamesFromBookings() []string {
 	}
 
 	return firstNames
+}
+
+func emailTickets(email string, boughtTickets uint) {
+	time.Sleep(10 * time.Second)
+	fmt.Println("#########")
+	message := fmt.Sprintf("Sending %v ticket(s) to email %v\n", boughtTickets, email)
+	fmt.Printf("Mail: %v", message)
+	fmt.Println("#########")
+	fmt.Printf("\n")
 }
