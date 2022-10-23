@@ -4,6 +4,7 @@ import (
 	"booking-cli/helper"
 	"fmt"
 	"strconv"
+	"sync"
 	"time"
 )
 
@@ -19,31 +20,35 @@ type UserData struct {
 
 // Empty slice of map
 var bookings []UserData
+var wg = sync.WaitGroup{}
 
 func main() {
 	welcome()
 
-	for {
-		input := helper.GetInputs()
-		boughtTicket, _ := strconv.Atoi(input["boughtTicket"])
+	input := helper.GetInputs()
+	boughtTicket, _ := strconv.Atoi(input["boughtTicket"])
 
-		user := UserData {
-			firstName: input["firstName"],
-			lastName: input["lastName"],
-			email: input["email"],
-			boughtTickets: uint(boughtTicket),
-		}
-	
-		bookings = append(bookings, user)
-
-		summary(user)
-		go emailTickets(user.email, user.boughtTickets)
-
-		if helper.AvailableTickets() == 0 {
-			fmt.Printf("Our %v is currently sold out. Come back next year\n", conferenceName)
-			break
-		}
+	user := UserData {
+		firstName: input["firstName"],
+		lastName: input["lastName"],
+		email: input["email"],
+		boughtTickets: uint(boughtTicket),
 	}
+
+	bookings = append(bookings, user)
+
+	summary(user)
+	// Increment or Sets number of WaitGroup counter used by goroutines to wait for
+	wg.Add(1)
+	go emailTickets(user.email, user.boughtTickets)
+
+	if helper.AvailableTickets() == 0 {
+		fmt.Printf("Our %v is currently sold out. Come back next year\n", conferenceName)
+		//break
+	}
+
+	// Waits for WaitGroup counter to be decreased to 0
+	wg.Wait()
 }
 
 func welcome() {
@@ -77,4 +82,6 @@ func emailTickets(email string, boughtTickets uint) {
 	fmt.Printf("Mail: %v", message)
 	fmt.Println("#########")
 	fmt.Printf("\n")
+	// Decrement WaitGroup counter by 1
+	wg.Done()
 }
